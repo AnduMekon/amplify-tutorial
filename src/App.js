@@ -1,83 +1,92 @@
-import logo from './logo.svg';
-
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import './App.css';
-console.log('it is running ')
-function App() {
- // Initialize state for form data
- const [formData, setFormData] = useState({
-  name: "",
-  email: "",
-});
-
-// Handle input change
-const handleInputChange = (e) => {
-  const { name, value } = e.target;
-  setFormData({
-    ...formData,
-    [name]: value, // Update the specific field being typed into
+function ContactForm() {
+  const [formData, setFormData] = useState({
+    name: '',
+    mobile: '',
+    email: '',
   });
-};
 
-// Handle form submission
-const handleSubmit = (e) => {
-  e.preventDefault();
-  // You can perform any action with formData here (e.g., send to API)
-  console.log("Form data submitted:", formData);
-};
+  const [errors, setErrors] = useState({
+    name: '',
+    mobile: '',
+    email: '',
+  });
 
-return (
-  <form onSubmit={handleSubmit}>
-     <div>
-      
-      <label color='red'>
-       <h3>We are currently working on this site. Please enter 
-        the information for our site experiment.Thank you!</h3>
-      </label> 
-    </div>
-    <div>
-       
-       <img src={logo} className="App-logo" alt="logo" />
-     
-      <label>
-        Last Name:
+  // Basic validation functions
+  const validateName = (name) => name.trim() !== '';
+  const validateMobile = (mobile) => /^[0-9]{10}$/.test(mobile); // Validates 10-digit mobile number
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); // Basic email regex
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    // Reset errors for the field being typed
+    setErrors({ ...errors, [name]: '' });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const newErrors = {
+      name: validateName(formData.name) ? '' : 'Name is required.',
+      mobile: validateMobile(formData.mobile) ? '' : 'Please enter a valid 10-digit mobile number.',
+      email: validateEmail(formData.email) ? '' : 'Please enter a valid email address.',
+    };
+
+    setErrors(newErrors);
+
+    // Only submit if there are no errors
+    if (!newErrors.name && !newErrors.mobile && !newErrors.email) {
+      console.log('Form Submitted:', formData);
+      alert('Form submitted successfully!');
+    } else {
+      console.log('Validation errors:', newErrors);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label htmlFor="name">Name:</label>
         <input
           type="text"
+          id="name"
           name="name"
           value={formData.name}
           onChange={handleInputChange}
-          required
         />
-      </label>
-    </div>
-    <div>
-      
-      <label>
-        First Name:
+        {errors.name && <p style={{ color: 'red' }}>{errors.name}</p>}
+      </div>
+
+      <div>
+        <label htmlFor="mobile">Mobile:</label>
         <input
           type="text"
-          name="name"
-          value={formData.name}
+          id="mobile"
+          name="mobile"
+          value={formData.mobile}
           onChange={handleInputChange}
-          required
         />
-      </label>
-    </div>
-    <div>
-      <label>
-        Email:
+        {errors.mobile && <p style={{ color: 'red' }}>{errors.mobile}</p>}
+      </div>
+
+      <div>
+        <label htmlFor="email">Email:</label>
         <input
           type="email"
+          id="email"
           name="email"
           value={formData.email}
           onChange={handleInputChange}
-          required
         />
-      </label>
-    </div>
-    <button type="submit">Submit</button>
-  </form>
-);
+        {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
+      </div>
+
+      <button type="submit">Submit</button>
+    </form>
+  );
 }
 
-export default App;
+export default ContactForm;
