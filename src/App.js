@@ -50,8 +50,8 @@ function ContactForm() {
     
     <form onSubmit={handleSubmit}>
       <div>
-        <h1>We are currently working on this site. Please enter 
-        the information for our site experiment.Thank you!</h1>
+        <h3>We are currently working on this site. Please enter 
+        the information for our site experiment.Thank you!</h3>
         <label htmlFor="name">Name:</label>
         <input
           type="text"
